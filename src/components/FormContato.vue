@@ -101,7 +101,7 @@
         this.loading = true;
 
         if (!this.contato.id) {
-          Contatos.salva(contato)
+          Contatos.salva(this.contato)
             .then(({data}) => {
               alert('Salvo com sucesso')
               this.loading = false;          
