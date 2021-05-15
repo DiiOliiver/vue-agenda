@@ -4,7 +4,7 @@
       <b-card class="mt-3" :header="title + 'usuários'">
         <b-form class="row" @submit="onSubmit" @reset="onReset">
           <b-form-group
-            class="col-4 col-md-4"
+            class="col-12 col-md-4"
             id="contato-group-nome"
             label="Nome do contato:"
             label-for="contato-nome"
@@ -19,7 +19,7 @@
           </b-form-group>
           
           <b-form-group
-            class="col-4 col-md-4"
+            class="col-12 col-md-4"
             id="contato-group-email"
             label="Email do contato:"
             label-for="contato-email"
@@ -34,7 +34,7 @@
           </b-form-group>
 
           <b-form-group
-            class="col-4 col-md-4"
+            class="col-12 col-md-4"
             id="contato-group-telefone"
             label="Telefone do contato:"
             label-for="contato-telefone"
@@ -50,8 +50,8 @@
           </b-form-group>
 
           <span class="col-12 col-md-12">
-            <b-button type="submit" variant="primary">Salvar</b-button>
-            <b-button type="reset" variant="danger">Cancelar</b-button>
+            <b-button class="right" style="margin-left: 4px" type="submit" variant="primary">Salvar</b-button>
+            <b-button class="right" type="reset" variant="danger">Cancelar</b-button>
           </span>
         </b-form>
       </b-card>
@@ -88,8 +88,7 @@
 
       if (this.contato.id) {
         this.getContato();
-      }
-      
+      }      
     },
     methods: {
       async getContato() {
@@ -103,13 +102,13 @@
         if (!this.contato.id) {
           Contatos.salva(this.contato)
             .then(({data}) => {
-              alert('Salvo com sucesso')
+              this.setSuccess('Contato foi cadastrado.');
               this.loading = false;          
               return this.$router.push({ path: '/' });
             })
             .catch(({response}) => {
               this.loading = false;
-              this.errors = response.errors;
+              this.setError('Cadastrar contato!');
               return this.$router.push({ path: '/' });
             });
           return;
@@ -117,13 +116,13 @@
 
         Contatos.atualizar(this.contato)
           .then(({data}) => {
-            alert('Atualizado com sucesso')
-            this.loading = false;          
+            this.setSuccess('Contato foi atualizado.');
+            this.loading = false;
             return this.$router.push({ path: '/' });
           })
           .catch(({response}) => {
             this.loading = false;
-            this.errors = response.errors;
+            this.setError('Atualizar contato!');
             return this.$router.push({ path: '/' });
           });
       },
@@ -132,6 +131,18 @@
         this.contato = {};
         return this.$router.push({ path: '/' })
       },
+      setSuccess(descricao) {
+        this.$toast.success(descricao, 'Sucesso', {
+          position: 'topRight'
+        });
+      },
+      setError(titulo = 'Erro inesperado!', descricao = null) {
+        descricao = descricao ? descricao : 'Ocorre um erro inesperado ao tentar realizar a ação.';
+
+        this.$toast.error(descricao, titulo, {
+          position: 'topRight'
+        });
+      }
     },
   }
 </script>
